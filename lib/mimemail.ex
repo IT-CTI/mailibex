@@ -24,7 +24,7 @@ defmodule MimeMail do
       end
 
     headers =
-      Regex.scan(~r/([A-Za-z-]+):\s([^\r\n]+(?:\r?\n(?![A-Za-z-]+:\s)[^\r\n]+)*)/m, headers)
+      Regex.scan(~r/([A-Za-z0-9-]+):[\s\n]+([^\r\n]+(?:\r?\n(?![A-Za-z0-9-]+:\s)[^\r\n]+)*)/m, headers)
 
     headers = for [raw, k, _] <- headers, do: {:"#{String.downcase(k)}", {:raw, raw}}
 

@@ -17,6 +17,17 @@ defmodule FlatMailTest do
     assert String.contains?(cd_7z_name,".7z")
   end
 
+
+  test "extract headers from outlook-like email" do
+    flat = File.read!("test/mails/mail_with_incorrect_headers.txt")
+    |> MimeMail.from_string
+
+    assert flat[:headers][:"content-type"] == {:raw,
+                                               "Content-Type: text/html; charset=utf-8"}
+    assert flat[:headers][:"message-id"] == {:raw,
+                                             "Message-ID: \r\n<201906071147.x57BlHUB003339-x57BlHUD003339@mx.cti.ru>"}
+  end
+
   test "flat mail mixed(alternative(txt,html))" do
     flat = File.read!("test/mails/amazon.eml")
     |> MimeMail.from_string
@@ -34,7 +45,7 @@ defmodule FlatMailTest do
     assert ".txt" = MimeTypes.bin2ext(txt)
     assert ".html" = MimeTypes.bin2ext(html)
     assert ".png" = MimeTypes.bin2ext(png)
-    flat = flat 
+    flat = flat
     |> MimeMail.Flat.to_mail
     |> MimeMail.to_string
     |> MimeMail.from_string
